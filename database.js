@@ -10,12 +10,17 @@ const pool = mysql.createPool({
     database: process.env.MYSQL_DATABASE
 }).promise();
 
+export async function getLeads() {
+    const [rows] = await pool.query("SELECT * FROM leads")
+    return rows;
+}
+
 export async function getUsers() {
     const [rows] = await pool.query("SELECT * FROM users")
     return rows;
 }
 
-export async function getUser(id) {
+export async function getUserById(id) {
     const [rows] = await pool.query(`
     SELECT * 
     FROM users
@@ -24,16 +29,34 @@ export async function getUser(id) {
     return rows[0];
 }
 
-export async function createUser(email, firstname, lastname, user_type, manager) {
+export async function getUserByEmail(email) {
+    const [rows] = await pool.query(`
+    SELECT * 
+    FROM users
+    WHERE email = ?
+    `, [email])
+    return rows[0];
+}
+
+export async function checkUserMdp(email, password) {
+    const [rows] = await pool.query(`
+    SELECT * 
+    FROM users
+    WHERE email = ? AND password = ?
+    `, [email, password])
+    return rows[0];
+}
+
+export async function createUser(email, password, firstname, lastname, user_type, manager) {
     const result = await pool.query(`
-    INSERT INTO users (email, firstname, lastname, user_type, manager)
-    VALUES (?, ?, ?, ?, ?)
-    `, [email, firstname, lastname, user_type, manager])
+    INSERT INTO users (email, password, firstname, lastname, user_type, manager)
+    VALUES (?, ?, ?, ?, ?, ?)
+    `, [email, password, firstname, lastname, user_type, manager])
     
     const id = result.insertId
-    return await getUser(id);
+    return await getUserById(id);
 }
 
 //const users = await createUser("slave2@gmail.com", "Dardal", "Slave", "SLAVE", "manager@gmail.com")
-const display = await getUsers()
-console.log(display);
+// const display = await getLeads()
+// console.log(display);
