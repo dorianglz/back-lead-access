@@ -2,16 +2,28 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 
-import { getUsers, getUserById, createUser, checkUserMdp, getLeads, getCollaborators, getNRP, getNRPCount, getManagerLeads, getUserLeads, updateLead } from './database.js'
+import { getUsers,
+    getUserById,
+    createUser,
+    checkUserMdp,
+    getLeads,
+    getCollaborators,
+    getNRP,
+    getNRPCount,
+    getManagerLeads,
+    getUserLeads,
+    updateLead,
+    addLeadToCollab, 
+    getLeadsDepartementCount,
+    clearNRP,
+    getUserByEmail} from './database.js'
 
 
 // SETUP
 
 const app = express() 
 
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors())
 
@@ -19,31 +31,43 @@ app.use(cors())
 // REQUEST
 app.get("/leads", async (req, res) => {
     const leads = await getLeads()
-    res.send(leads)
+    res.status(200).send(leads)
+})
+
+app.get("/leads/clear", async (req, res) => {
+    const leads = await clearNRP()
+    res.status(200).send(leads)
 })
 
 app.post("/leads/:id", async (req, res) => {
     const id = req.params.id
     const { champ, value } = req.body
     const leads = await updateLead(id, champ, value)
-    res.send(leads)
+    res.status(200).send(leads)
+})
+
+app.post("/leads/user/:id", async (req, res) => {
+    const id = req.params.id
+    const { region, len } = req.body
+    const leads = await addLeadToCollab(id, region, len)
+    res.status(200).send(leads)
 })
 
 app.get("/leads/manager/:id", async (req, res) => {
     const id = req.params.id
     const leads = await getManagerLeads(id)
-    res.send(leads)
+    res.status(200).send(leads)
 })
 
 app.get("/leads/user/:id", async (req, res) => {
     const id = req.params.id
     const leads = await getUserLeads(id)
-    res.send(leads)
+    res.status(200).send(leads)
 })
 
 app.get("/nrp", async (req, res) => {
     const leads = await getNRP()
-    res.send(leads)
+    res.status(200).send(leads)
 })
 
 app.get("/nrp/count", async (req, res) => {
@@ -51,21 +75,33 @@ app.get("/nrp/count", async (req, res) => {
     res.send(count)
 })
 
+app.post("/leads/departement/count", async (req, res) => {
+    const { region } = req.body
+    const count = await getLeadsDepartementCount(region)
+    res.send(count)
+})
+
 app.get("/users", async (req, res) => {
     const users = await getUsers()
-    res.send(users)
+    res.status(200).send(users)
 })
 
 app.get("/collaborators/:id", async (req, res) => {
     const id = req.params.id
     const users = await getCollaborators(id)
-    res.send(users)
+    res.status(200).send(users)
 })
 
 app.get("/users/:id", async (req, res) => {
     const id = req.params.id
     const user = await getUserById(id)
-    res.send(user)
+    res.status(200).send(user)
+})
+
+app.post("/users/email", async (req, res) => {
+    const { email } = req.body
+    const user = await getUserByEmail(email)
+    res.status(200).send(user)
 })
 
 app.post("/users", async (req, res) => {

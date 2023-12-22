@@ -33,11 +33,20 @@ export async function getUserLeads(id) {
     return rows;
 }
 
+export async function getLeadsDepartementCount(departement) {
+    const [rows] = await pool.query(`
+    SELECT COUNT(*)
+    FROM leads
+    WHERE departement IN (?) AND assigned_to is null 
+    `, [departement])
+    return rows[0]['COUNT(*)'];
+}
+
 export async function getNRP() {
     const [rows] = await pool.query(`
     SELECT *
     FROM leads
-    WHERE status = "NRP"
+    WHERE statut = "NRP"
     `)
     return rows;
 }
@@ -46,7 +55,7 @@ export async function getNRPCount() {
     const [rows] = await pool.query(`
     SELECT COUNT(*)
     FROM leads
-    WHERE status = "NRP"
+    WHERE statut = "NRP"
     `)
     return rows[0]['COUNT(*)'];
 }
@@ -108,8 +117,26 @@ export async function updateLead(id, champ, value) {
     return rows[0];
 }
 
+export async function addLeadToCollab(id, region, number) {
+    const [rows] = await pool.query(`
+    UPDATE leads
+    SET assigned_to = ?
+    WHERE (departement IN (?) AND assigned_to is NULL)
+    LIMIT ?
+    `, [id, region, number])
+    return rows.affectedRows;
+}
+
+export async function clearNRP() {
+    const [rows] = await pool.query(`
+    UPDATE leads
+    SET assigned_to = NULL, statut = NULL
+    WHERE statut = "NRP"
+    `,)
+    return rows;
+}
 
 
 //const users = await createUser("slave2@gmail.com", "Dardal", "Slave", "SLAVE", "manager@gmail.com")
-// const display = await updateLead(14, "zipcode", "99999")
+// const display = await getUserByEmail("test@gmail.com")
 // console.log(display);
