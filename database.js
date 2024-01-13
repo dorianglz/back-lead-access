@@ -20,13 +20,13 @@ export async function getManagerLeads(id, search, limit, offset) {
     SELECT *
     FROM leads
     WHERE manager_id = ?
-    AND (firstname LIKE "%?%"
-    OR email LIKE "%?%" 
-    OR phone_number_concatenated LIKE "%?%" 
-    OR lastname LIKE "%?%")
+    AND (firstname LIKE "%${search}%"
+    OR email LIKE "%${search}%" 
+    OR phone_number_concatenated LIKE "%${search}%" 
+    OR lastname LIKE "%${search}%")
     LIMIT ?
     OFFSET ?
-    `, [id, search, search, search, search, limit, offset])
+    `, [id, limit, offset])
     return rows;
 }
 
