@@ -52,7 +52,7 @@ export async function getManagerLeadsCountNotAssigned(id) {
 export async function getUserLeads(id, search, limit, offset) {
     const [rows] = await pool.query(`
     SELECT *
-    FROM leads
+    FROM lead_access_app.leads
     WHERE assigned_to = ?
     AND (firstname LIKE "%${search}%"
     OR email LIKE "%${search}%" 
