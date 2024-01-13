@@ -79,7 +79,9 @@ app.get("/leads/manager/count/notassigned/:id", async (req, res) => {
 
 app.get("/leads/user/:id", async (req, res) => {
     const id = req.params.id
-    const leads = await getUserLeads(id)
+    const { search, limit, offset } = req.body
+
+    const leads = await getUserLeads(id, search, limit, offset)
     res.status(200).send(leads)
 })
 

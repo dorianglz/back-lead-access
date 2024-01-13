@@ -30,20 +30,6 @@ export async function getManagerLeads(id, search, limit, offset) {
     return rows;
 }
 
-/*
-SELECT * FROM lead_access_app.leads
-WHERE firstname LIKE "%%"
-OR email LIKE "%%" 
-OR phone_number_concatenated LIKE "%%" 
-OR lastname LIKE "%%";
-
-WHERE manager_id = 1 AND
-(firstname LIKE "%aa%"
-OR email LIKE "%aa%" 
-OR phone_number_concatenated LIKE "%aa%" 
-OR lastname LIKE "%aa%");
-*/
-
 export async function getManagerLeadsCount(id) {
     const [rows] = await pool.query(`
     SELECT COUNT(*)
@@ -63,13 +49,18 @@ export async function getManagerLeadsCountNotAssigned(id) {
     return rows[0]['COUNT(*)'];
 }
 
-export async function getUserLeads(id) {
+export async function getUserLeads(id, search, limit, offset) {
     const [rows] = await pool.query(`
     SELECT *
     FROM leads
     WHERE assigned_to = ?
-    LIMIT 1000
-    `, [id])
+    AND (firstname LIKE "%${search}%"
+    OR email LIKE "%${search}%" 
+    OR phone_number_concatenated LIKE "%${search}%" 
+    OR lastname LIKE "%${search}%")
+    LIMIT ?
+    OFFSET ?
+    `, [id, limit, offset])
     return rows;
 }
 
