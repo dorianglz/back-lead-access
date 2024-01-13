@@ -54,6 +54,10 @@ export async function getUserLeads(id, search, limit, offset) {
     SELECT *
     FROM leads
     WHERE assigned_to = ?
+    AND (firstname LIKE "%${search}%"
+    OR email LIKE "%${search}%" 
+    OR phone_number_concatenated LIKE "%${search}%" 
+    OR lastname LIKE "%${search}%")
     LIMIT ?
     OFFSET ?
     `, [id, limit, offset])

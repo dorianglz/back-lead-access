@@ -77,7 +77,7 @@ app.get("/leads/manager/count/notassigned/:id", async (req, res) => {
     res.status(200).send(leads)
 })
 
-app.post("/leads/user/:id", async (req, res) => {
+app.post("/leads/users/:id", async (req, res) => {
     const id = req.params.id
     const { search, limit, offset } = req.body
 
