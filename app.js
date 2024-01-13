@@ -18,7 +18,8 @@ import { getUsers,
     addLeadToCollab, 
     getLeadsDepartementCount,
     clearNRP,
-    getUserByEmail
+    getUserByEmail,
+    getManagerLeadsCountNotAssigned
 } from './database.js'
 
 
@@ -65,6 +66,12 @@ app.get("/leads/manager/:id", async (req, res) => {
 app.get("/leads/manager/count/:id", async (req, res) => {
     const id = req.params.id
     const leads = await getManagerLeadsCount(id)
+    res.status(200).send(leads)
+})
+
+app.get("/leads/manager/count/notassigned/:id", async (req, res) => {
+    const id = req.params.id
+    const leads = await getManagerLeadsCountNotAssigned(id)
     res.status(200).send(leads)
 })
 
@@ -142,6 +149,6 @@ app.use((err, req, res, next) => {
 
 // LISTENNER
 
-app.listen(8080, () => {
-    console.log('Server running port 8080')
+app.listen(8800, () => {
+    console.log('Server running port 8800')
 })
