@@ -15,15 +15,34 @@ export async function getLeads() {
     return rows;
 }
 
-export async function getManagerLeads(id) {
+export async function getManagerLeads(id, search, limit, offset) {
     const [rows] = await pool.query(`
     SELECT *
     FROM leads
     WHERE manager_id = ?
-    LIMIT 1000
-    `, [id])
+    AND (firstname LIKE "%?%"
+    OR email LIKE "%?%" 
+    OR phone_number_concatenated LIKE "%?%" 
+    OR lastname LIKE "%?%")
+    LIMIT ?
+    OFFSET ?
+    `, [id, search, search, search, search, limit, offset])
     return rows;
 }
+
+/*
+SELECT * FROM lead_access_app.leads
+WHERE firstname LIKE "%%"
+OR email LIKE "%%" 
+OR phone_number_concatenated LIKE "%%" 
+OR lastname LIKE "%%";
+
+WHERE manager_id = 1 AND
+(firstname LIKE "%aa%"
+OR email LIKE "%aa%" 
+OR phone_number_concatenated LIKE "%aa%" 
+OR lastname LIKE "%aa%");
+*/
 
 export async function getManagerLeadsCount(id) {
     const [rows] = await pool.query(`

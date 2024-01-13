@@ -57,9 +57,11 @@ app.post("/leads/user/:id", async (req, res) => {
     res.status(200).send(leads)
 })
 
-app.get("/leads/manager/:id", async (req, res) => {
+post.get("/leads/manager/:id", async (req, res) => {
     const id = req.params.id
-    const leads = await getManagerLeads(id)
+    const { search, limit, offset } = req.body
+
+    const leads = await getManagerLeads(id, search, limit, offset)
     res.status(200).send(leads)
 })
 
