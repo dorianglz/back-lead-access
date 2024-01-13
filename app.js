@@ -11,12 +11,15 @@ import { getUsers,
     getNRP,
     getNRPCount,
     getManagerLeads,
+    getManagerLeadsCount,
     getUserLeads,
+    getUserLeadsCount,
     updateLead,
     addLeadToCollab, 
     getLeadsDepartementCount,
     clearNRP,
-    getUserByEmail} from './database.js'
+    getUserByEmail
+} from './database.js'
 
 
 // SETUP
@@ -59,9 +62,21 @@ app.get("/leads/manager/:id", async (req, res) => {
     res.status(200).send(leads)
 })
 
+app.get("/leads/manager/count/:id", async (req, res) => {
+    const id = req.params.id
+    const leads = await getManagerLeadsCount(id)
+    res.status(200).send(leads)
+})
+
 app.get("/leads/user/:id", async (req, res) => {
     const id = req.params.id
     const leads = await getUserLeads(id)
+    res.status(200).send(leads)
+})
+
+app.get("/leads/user/count/:id", async (req, res) => {
+    const id = req.params.id
+    const leads = await getUserLeadsCount(id)
     res.status(200).send(leads)
 })
 

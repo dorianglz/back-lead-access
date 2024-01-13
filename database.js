@@ -20,6 +20,16 @@ export async function getManagerLeads(id) {
     SELECT *
     FROM leads
     WHERE manager_id = ?
+    LIMIT 1000
+    `, [id])
+    return rows;
+}
+
+export async function getManagerLeadsCount(id) {
+    const [rows] = await pool.query(`
+    SELECT COUNT(*)
+    FROM leads
+    WHERE manager_id = ?
     `, [id])
     return rows;
 }
@@ -27,6 +37,16 @@ export async function getManagerLeads(id) {
 export async function getUserLeads(id) {
     const [rows] = await pool.query(`
     SELECT *
+    FROM leads
+    WHERE assigned_to = ?
+    LIMIT 1000
+    `, [id])
+    return rows;
+}
+
+export async function getUserLeadsCount(id) {
+    const [rows] = await pool.query(`
+    SELECT COUNT(*)
     FROM leads
     WHERE assigned_to = ?
     `, [id])
@@ -135,8 +155,3 @@ export async function clearNRP() {
     `,)
     return rows;
 }
-
-
-//const users = await createUser("slave2@gmail.com", "Dardal", "Slave", "SLAVE", "manager@gmail.com")
-// const display = await getUserByEmail("test@gmail.com")
-// console.log(display);
