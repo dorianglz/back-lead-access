@@ -177,14 +177,14 @@ export async function clearNRP() {
 }
 
 
-export async function getAllStatusCount() {
+export async function getAllStatusCount(id) {
     const [rows] = await pool.query(`
     SELECT statut, COUNT(*) AS count_statut
     FROM lead_access_app.leads
     WHERE manager_id=?
     GROUP BY statut
     ORDER BY count_statut DESC;
-    `,)
+    `, [id])
     return rows;
 }
 
