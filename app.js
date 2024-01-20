@@ -98,12 +98,12 @@ app.get("/nrp", async (req, res) => {
     res.status(200).send(leads)
 })
 
-app.post("/all/count", async (req, res) => {
-    const counts = await getAllStatusCount()
+app.post("/all/count/manager/:id", async (req, res) => {
+    const counts = await getAllStatusCount(id)
     res.send(counts)
 })
 
-app.post("/all/count/:id", async (req, res) => {
+app.post("/all/count/user/:id", async (req, res) => {
     const id = req.params.id
     const counts = await getAllStatusCountUser(id)
     res.send(counts)
