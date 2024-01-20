@@ -186,3 +186,14 @@ export async function getAllStatusCount() {
     `,)
     return rows;
 }
+
+export async function getAllStatusCountUser(id) {
+    const [rows] = await pool.query(`
+    SELECT statut, COUNT(*) AS count_statut
+    FROM lead_access_app.leads
+    WHERE assigned_to=?
+    GROUP BY statut
+    ORDER BY count_statut DESC;
+    `, [id])
+    return rows;
+}
