@@ -19,7 +19,8 @@ import { getUsers,
     getLeadsDepartementCount,
     clearNRP,
     getUserByEmail,
-    getManagerLeadsCountNotAssigned
+    getManagerLeadsCountNotAssigned,
+    getAllStatusCount
 } from './database.js'
 
 
@@ -94,6 +95,11 @@ app.get("/leads/user/count/:id", async (req, res) => {
 app.get("/nrp", async (req, res) => {
     const leads = await getNRP()
     res.status(200).send(leads)
+})
+
+app.post("/all/count", async (req, res) => {
+    const counts = await getAllStatusCount()
+    res.send(counts)
 })
 
 app.get("/nrp/count", async (req, res) => {
