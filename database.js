@@ -73,12 +73,14 @@ export async function getUserLeadsCount(id) {
     return rows[0]['COUNT(*)'];
 }
 
-export async function getLeadsDepartementCount(departement) {
+export async function getLeadsDepartementCount(departement, id) {
     const [rows] = await pool.query(`
     SELECT COUNT(*)
     FROM leads
-    WHERE departement IN (?) AND assigned_to is null 
-    `, [departement])
+    WHERE departement IN (?)
+        AND assigned_to is null 
+        AND manager_id = ?
+    `, [departement, id])
     return rows[0]['COUNT(*)'];
 }
 

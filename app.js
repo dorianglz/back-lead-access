@@ -116,8 +116,8 @@ app.get("/nrp/count", async (req, res) => {
 })
 
 app.post("/leads/departement/count", async (req, res) => {
-    const { region } = req.body
-    const count = await getLeadsDepartementCount(region)
+    const { region, id } = req.body
+    const count = await getLeadsDepartementCount(region, id)
     res.send(count)
 })
 
