@@ -40,8 +40,9 @@ app.get("/leads", async (req, res) => {
     res.status(200).send(leads)
 })
 
-app.get("/leads/clear", async (req, res) => {
-    const leads = await clearNRP()
+app.get("/leads/clear/:id", async (req, res) => {
+    const id = req.params.id
+    const leads = await clearNRP(id)
     res.status(200).send(leads)
 })
 
@@ -110,8 +111,9 @@ app.post("/all/count/user/:id", async (req, res) => {
     res.send(counts)
 })
 
-app.get("/nrp/count", async (req, res) => {
-    const count = await getNRPCount()
+app.get("/nrp/count/:id", async (req, res) => {
+    const id = req.params.id
+    const count = await getNRPCount(id)
     res.send(count)
 })
 

@@ -93,12 +93,13 @@ export async function getNRP() {
     return rows;
 }
 
-export async function getNRPCount() {
+export async function getNRPCount(id) {
     const [rows] = await pool.query(`
     SELECT COUNT(*)
     FROM leads
     WHERE statut = "NRP"
-    `)
+    and manager_id = ?
+    `, [id])
     return rows[0]['COUNT(*)'];
 }
 
@@ -169,12 +170,13 @@ export async function addLeadToCollab(id, region, number) {
     return rows.affectedRows;
 }
 
-export async function clearNRP() {
+export async function clearNRP(id) {
     const [rows] = await pool.query(`
     UPDATE leads
     SET assigned_to = NULL, statut = NULL
     WHERE statut = "NRP"
-    `,)
+    and manager_id = ?
+    `, [id])
     return rows;
 }
 
