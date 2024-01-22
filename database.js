@@ -239,13 +239,13 @@ export async function updateLead(id, champ, value) {
     return rows[0];
 }
 
-export async function addLeadToCollab(id, region, number) {
+export async function addLeadToCollab(id, region, number, manager_id) {
     const [rows] = await pool.query(`
     UPDATE leads
     SET assigned_to = ?
-    WHERE (departement IN (?) AND assigned_to is NULL)
+    WHERE (departement IN (?) AND assigned_to is NULL AND manager_id = ?)
     LIMIT ?
-    `, [id, region, number])
+    `, [id, region, manager_id, number])
     return rows.affectedRows;
 }
 

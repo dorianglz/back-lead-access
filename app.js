@@ -53,9 +53,9 @@ app.post("/leads/:id", async (req, res) => {
 })
 
 app.post("/leads/user/:id", async (req, res) => {
-    const id = req.params.id
-    const { region, len } = req.body
-    const leads = await addLeadToCollab(id, region, len)
+    const myid = req.params.id
+    const { region, len, id } = req.body
+    const leads = await addLeadToCollab(myid, region, len, id)
     res.status(200).send(leads)
 })
 
