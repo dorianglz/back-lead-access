@@ -44,12 +44,11 @@ export async function getManagerLeads(id, search, status, limit, offset) {
         query += `
             AND (firstname LIKE ? 
             OR email LIKE ? 
-            OR statut LIKE ? 
             OR phone_number_concatenated LIKE ? 
             OR lastname LIKE ?)`;
         
         const searchParam = `%${search}%`;
-        params.push(searchParam, searchParam, searchParam, searchParam, searchParam);
+        params.push(searchParam, searchParam, searchParam, searchParam);
     }
 
     if (status) {
@@ -90,20 +89,59 @@ export async function getManagerLeadsCountNotAssigned(id) {
     return rows[0]['COUNT(*)'];
 }
 
-export async function getUserLeads(id, search, limit, offset) {
-    const [rows] = await pool.query(`
+// export async function getUserLeads(id, search, limit, offset) {
+//     const [rows] = await pool.query(`
+//     SELECT *
+//     FROM leads
+//     WHERE assigned_to = ?
+//     AND (firstname LIKE "%${search}%"
+//     OR email LIKE "%${search}%" 
+//     OR phone_number_concatenated LIKE "%${search}%" 
+//     OR lastname LIKE "%${search}%")
+//     LIMIT ?
+//     OFFSET ?
+//     `, [id, limit, offset])
+//     return rows;
+// }
+
+export async function getUserLeads(id, search, status, limit, offset) {
+    let query = `
     SELECT *
     FROM leads
     WHERE assigned_to = ?
-    AND (firstname LIKE "%${search}%"
-    OR email LIKE "%${search}%" 
-    OR phone_number_concatenated LIKE "%${search}%" 
-    OR lastname LIKE "%${search}%")
+    `;
+
+    const params = [id];
+
+    if (search) {
+        query += `
+            AND (firstname LIKE ? 
+            OR email LIKE ? 
+            OR phone_number_concatenated LIKE ? 
+            OR lastname LIKE ?)`;
+        
+        const searchParam = `%${search}%`;
+        params.push(searchParam, searchParam, searchParam, searchParam);
+    }
+
+    if (status) {
+        query += `
+            AND statut = ?`;
+        
+        params.push(status);
+    }
+
+    query += `
     LIMIT ?
-    OFFSET ?
-    `, [id, limit, offset])
+    OFFSET ?`;
+
+    params.push(limit, offset);
+
+    const [rows] = await pool.query(query, params);
     return rows;
 }
+
+
 
 export async function getUserLeadsCount(id) {
     const [rows] = await pool.query(`
