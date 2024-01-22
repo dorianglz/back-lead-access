@@ -33,19 +33,6 @@ app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*'); // Mettez ici votre domaine autorisé
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    
-    // Si la requête est une OPTIONS, renvoyez une réponse immédiate avec un statut 200
-    if (req.method === 'OPTIONS') {
-      return res.status(200).end();
-    }
-    
-    next();
-});  
-
 // REQUEST
 app.get("/leads", async (req, res) => {
     const leads = await getLeads()
@@ -74,9 +61,9 @@ app.post("/leads/user/:id", async (req, res) => {
 
 app.post("/leads/manager/:id", async (req, res) => {
     const id = req.params.id
-    const { search, limit, offset } = req.body
+    const { search, status, limit, offset } = req.body
 
-    const leads = await getManagerLeads(id, search, limit, offset)
+    const leads = await getManagerLeads(id, search, status, limit, offset)
     res.status(200).send(leads)
 })
 
