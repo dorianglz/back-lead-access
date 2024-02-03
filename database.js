@@ -130,10 +130,15 @@ export async function getUserLeads(id, search, status, limit, offset) {
     }
 
     if (status) {
-        query += `
-            AND statut = ?`;
-        
-        params.push(status);
+        if (status === 'Sans statut') {
+            query += `
+            AND statut is null`;
+        } else {
+            query += `
+                AND statut = ?`;
+            
+            params.push(status);
+        }
     }
 
     query += `
